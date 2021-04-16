@@ -11,9 +11,9 @@ Paper:
 How to cite:
 ```
 @inproceedings{Cornelio2020VotingWR,
-  title={Voting with Random Classifiers (VORACE)},
+  title={Voting with Random Classifiers (VORACE): Theoretical and Experimental Analysis},
   author={Cristina Cornelio and Michele Donini and Andrea Loreggia and M. Pini and F. Rossi},
-  booktitle={AAMAS},
-  year={2020}
+  booktitle={JAAMAS},
+  year={2021}
 }
 ```
