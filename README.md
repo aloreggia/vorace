@@ -26,3 +26,8 @@ pip install -r requirements.txt
   year={2021}
 }
 ```
+
+## License
+
+* License type: **Apache 2.0**
+* more info [here](LICENSE)
