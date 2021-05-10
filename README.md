@@ -6,7 +6,7 @@ pip install -r requirements.txt
 
 Paper:
 
-[arXiv preprint][https://arxiv.org/abs/1909.08996]
+[arXiv preprint](https://arxiv.org/abs/1909.08996)
 
 How to cite:
 ```
