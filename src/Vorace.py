@@ -27,61 +27,6 @@ from keras.utils import to_categorical
 from itertools import combinations, permutations
 
 
-def _build_graph(ranks):
-	n_voters, n_candidates = ranks.shape
-	edge_weights = np.zeros((n_candidates, n_candidates))
-	for i, j in combinations(range(n_candidates), 2):
-		preference = ranks[:, i] - ranks[:, j]
-		h_ij = np.sum(preference < 0)  # prefers i to j
-		h_ji = np.sum(preference > 0)  # prefers j to i
-		if h_ij > h_ji:
-			edge_weights[i, j] = h_ij - h_ji
-		elif h_ij < h_ji:
-			edge_weights[j, i] = h_ji - h_ij
-	return edge_weights
-
-def rankaggr_lp(ranks):
-	"""Kemeny-Young optimal rank aggregation"""
-	#print(ranks)
-	n_voters, n_candidates = ranks.shape
-	#print(type(n_candidates))
-
-	# maximize c.T * x
-	edge_weights = _build_graph(ranks)
-	c = -1 * edge_weights.ravel()  
-
-	idx = lambda i, j: n_candidates * i + j
-
-	# constraints for every pair
-	rows = (int)((n_candidates * (n_candidates - 1)) / 2)
-	pairwise_constraints = np.zeros((rows,
-										n_candidates ** 2))
-	for row, (i, j) in zip(pairwise_constraints,
-							combinations(range(n_candidates), 2)):
-		row[[idx(i, j), idx(j, i)]] = 1
-
-	# and for every cycle of length 3
-	triangle_constraints = np.zeros(((n_candidates * (n_candidates - 1) *
-										(n_candidates - 2)),
-										n_candidates ** 2))
-	for row, (i, j, k) in zip(triangle_constraints,
-								permutations(range(n_candidates), 3)):
-		row[[idx(i, j), idx(j, k), idx(k, i)]] = 1
-
-	constraints = np.vstack([pairwise_constraints, triangle_constraints])
-	constraint_rhs = np.hstack([np.ones(len(pairwise_constraints)),
-								np.ones(len(triangle_constraints))])
-	constraint_signs = np.hstack([np.zeros(len(pairwise_constraints)),  # ==
-									np.ones(len(triangle_constraints))])  # >=
-
-	obj, x, duals = lp_solve(c, constraints, constraint_rhs, constraint_signs,
-								xint=range(1, 1 + n_candidates ** 2))
-
-	x = np.array(x).reshape((n_candidates, n_candidates))
-	aggr_rank = x.sum(axis=1)
-
-	return obj, aggr_rank
-
 class Vorace_agent:
 
 	initialState=None
@@ -308,21 +253,21 @@ class Vorace:
 		for i in range(len(self.models)):
 			self.models[i].reset()
 	
-	def predict(self, x, y=[], bestClassifier=False, nClasses=10, voting="Sum", argMax=False, weighted=False, tiebreak="best", epsilon=False):
+	def predict(self, x, bestClassifier=False, nClasses=10, voting="Sum", argMax=False, weighted=False, tiebreak="best", epsilon=False):
 	
 		temp_fscores=None
 		if bestClassifier:
 			y_pred = self.models[self.best_index].predict(x)
 		else:
 			if weighted==False:
-				y_pred, temp_fscores=self.votingSystem(voting,self.models,x,y, classes=nClasses, proba=True)
+				y_pred, temp_fscores=self.votingSystem(voting,self.models,x, classes=nClasses, proba=True)
 			else:
-				y_pred, temp_fscores=self.votingSystem(voting,self.models,x,y, classes=nClasses, proba=True, weights=self.weights)
+				y_pred, temp_fscores=self.votingSystem(voting,self.models,x, classes=nClasses, proba=True, weights=self.weights)
 			
 		
 		#print(f"=========== {y_pred} ==========")
 		#print(f"=========== {y} ==========")
-		if tiebreak is "best" and  y!=[]:
+		if tiebreak is "best":
 			best_pred = self.models[self.best_index].predict(x)
 			return_y_pred=[]
 			if voting is "Plurality":
@@ -471,7 +416,7 @@ class Vorace:
 
 			#print("F-score "+str(i)+"th module: "+ str(f1_score(y_val,y_pred,average="micro")))
 			#print(f"F-score {i}th module: {f1_score(y,y_pred,average='micro')}")
-			self.fscores.append(f1_score(y,y_pred,average='micro'))
+			#self.fscores.append(f1_score(y,y_pred,average='micro'))
 			#if  y!=[]: fscores.append(f1_score(y,y_pred,average="micro"))
 
 		'''
@@ -644,42 +589,6 @@ class Vorace:
 			
 			#print(profile)
 			#print(scores[l])
-			#exit()
-		#return min_dist, best_rank
-		return scores
-
-	def rankaggr_ilp(preferences):
-		'''
-		For each sample compute the score given the scoring vector
-		'''
-		n_candidates=len(preferences[0][0])
-		n_model=len(preferences[0])
-		n_samples = len(preferences)
-		scores=np.zeros((n_samples,n_candidates), dtype="f4")
-
-		for l in range(len(preferences)):
-			#rofile=np.zeros((n_model,n_candidates), dtype="i2")
-			profile=np.ndarray((n_model,n_candidates), dtype="int")
-			for i in range(n_model):
-				#print(f"PREFERENCES: {preferences[l][i]}")
-				temp=Vorace.sortingPref(preferences[l][i])
-				#print(f"Temp: {temp}")
-				#print([[x] for x in temp ])
-				#profile.append([[x] for x in temp ])
-				profile[i]=temp
-
-			#print(profile)
-			ranks = profile
-			
-			consensus = rankaggr_lp(ranks)[1]
-			#print(f"CONSENSUS: {consensus}")
-			for c in range(len(consensus)):
-				candidate = (int)(consensus[c])
-				#print(f"Candidate {candidate}")
-				scores[l][candidate] = n_candidates - c
-			#print(scores[l])
-
-			#print("A Kemeny-Young aggregation is: {}".format(np.argsort(consensus)))
 			#exit()
 		#return min_dist, best_rank
 		return scores
