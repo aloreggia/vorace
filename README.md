@@ -1,4 +1,4 @@
-# VORACE: Voting with Random Classifiers
+# VORACE: VOting with RAndom ClassifiErs
 
 In many machine learning scenarios, looking for the best classifier that fits a particular dataset can be very costly in terms of time and resources. Moreover, it can require deep knowledge of the specific domain.
 We propose a new technique which does not require profound expertise in the domain and avoids the commonly used strategy of hyper-parameter tuning and model selection. Our method is an innovative ensemble technique that uses voting rules over a set of randomly-generated classifiers.
