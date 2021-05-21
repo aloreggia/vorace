@@ -20,16 +20,16 @@ pip install -r requirements.txt
 ### How to cite
 ```
 @article{Cornelio2021,
-author = {Cornelio, Cristina and Donini, Michele and Loreggia, Andrea and Pini, Maria Silvia and Rossi, Francesca},
-doi = {10.1007/s10458-021-09504-y},
-issn = {1573-7454},
-journal = {Autonomous Agents and Multi-Agent Systems},
-number = {2},
-pages = {22},
-title = {{Voting with random classifiers (VORACE): theoretical and experimental analysis}},
-url = {https://doi.org/10.1007/s10458-021-09504-y},
-volume = {35},
-year = {2021}
+  author = {Cornelio, Cristina and Donini, Michele and Loreggia, Andrea and Pini, Maria Silvia and Rossi, Francesca},
+  doi = {10.1007/s10458-021-09504-y},
+  issn = {1573-7454},
+  journal = {Autonomous Agents and Multi-Agent Systems},
+  number = {2},
+  pages = {22},
+  title = {{Voting with random classifiers (VORACE): theoretical and experimental analysis}},
+  url = {https://doi.org/10.1007/s10458-021-09504-y},
+  volume = {35},
+  year = {2021}
 }
 ```
 
