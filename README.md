@@ -15,7 +15,7 @@ pip install -r requirements.txt
 
 ## Paper
 **Voting with Random Classifiers (VORACE): Theoretical and Experimental Analysis**
-* [arXiv preprint](https://arxiv.org/abs/1909.08996)
+* [Autonomous Agents and Multi-Agent Systems](https://link.springer.com/article/10.1007/s10458-021-09504-y)
 
 ### How to cite
 ```
